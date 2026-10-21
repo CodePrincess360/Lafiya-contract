@@ -218,6 +218,12 @@ jobs:
         run: python .github/scripts/check_readme_versions.py
       - name: Check error/event catalogs are regenerated
         run: python3 scripts/conformance/gen_catalog.py --check
+      - name: Check ADR numbering
+        run: python3 scripts/check_adr_numbering.py
+      - name: Mainnet readiness gate
+        run: |
+          python3 scripts/check_mainnet_readiness.py
+          python3 -m pip install -q pytest && python3 -m pytest -q -o addopts="" scripts/tests/test_check_mainnet_readiness.py scripts/tests/test_resource_headroom.py scripts/tests/test_ttl_keeper.py
       - name: Run the verification-model truth table
         run: python3 scripts/verification_model.py
 

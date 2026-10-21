@@ -40,6 +40,8 @@
 
 # Decisions
 
+- [Mainnet readiness gate](runbooks/mainnet-readiness.md)
+- [Runbook: TTL keeper](runbooks/ttl-keeper.md)
 - [ADR index](adr/README.md)
   - [ADR-0001: Hash-only on-chain footprint](adr/0001-hash-only-on-chain-footprint.md)
   - [ADR-0002: contractclient boundary](adr/0002-contractclient-boundary.md)
@@ -50,7 +52,7 @@
   - [ADR-0009: Treasury and custody model](adr/0009-treasury-asset-custody-model.md)
   - [ADR-0010: Release manifest and compatibility](adr/0010-release-manifest-and-compatibility.md)
   - [ADR-0011: RPC failover and transaction recovery](adr/0011-rpc-provider-failover-and-transaction-recovery.md)
-  - [ADR-0012: Multi-jurisdiction deployment topology](adr/0012-multi-jurisdiction-deployment-topology.md)
+  - [ADR-0020: Multi-jurisdiction deployment topology](adr/0020-multi-jurisdiction-deployment-topology.md)
   - [ADR template](adr/0000-template.md)
 - [Spike: contract interface conformance](spikes/0137-contract-interface-conformance.md)
 

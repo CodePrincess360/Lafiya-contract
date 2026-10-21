@@ -11,7 +11,7 @@ When a contract is paused, core write operations are blocked to prevent new atte
 | `add_attester` | **Blocked** | Core write; prevents new fraudulent attesters during incident |
 | `revoke_attester` | **Allowed** | Remediation; must remain available to remove compromised attesters |
 | `is_attester` | **Allowed** | Read-only; essential for authorization checks |
-| `is_paused` | **Allowed** | Read-only; needed for cross-contract pause coordination (ADR-0012) |
+| `is_paused` | **Allowed** | Read-only; needed for cross-contract pause coordination (ADR-0021) |
 | `set_max_attesters` | **Allowed** | Administrative; emergency configuration changes are critical |
 | `pause` | **Allowed** | Remediation; must work even when already paused |
 | `unpause` | **Allowed** | Remediation; essential for recovering from incident |
