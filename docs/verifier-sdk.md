@@ -37,6 +37,52 @@ const result = await verifier.verifyCard(qrPayload, { disclosedFields, maxAgeDay
 
 `verifyCard` never throws: RPC and parsing failures become verdicts.
 
+### Cancellation, timeouts, and retries
+
+Every chain read accepts an `AbortSignal` and a per-call deadline:
+
+```ts
+const controller = new AbortController();
+const result = await verifier.verifyCard(qrPayload, {
+  signal: controller.signal, // e.g. aborted when the user leaves the screen
+  timeoutMs: 5_000,          // per read attempt
+});
+if (result.verdict === "unavailable") console.log(result.transportError?.kind);
+```
+
+`BindingsChainReader` defaults to a 10 s per-attempt deadline and retries
+**reads** (all of its calls are idempotent simulations) at most twice, with
+full-jitter exponential backoff (`random() * min(maxDelayMs, baseDelayMs * 2^n)`,
+200 ms base, 2 s cap). Configure both with
+`new BindingsChainReader({ timeoutMs, retry: { retries, baseDelayMs, maxDelayMs } })`.
+An abort cancels the in-flight attempt and any pending backoff; it is never
+retried. `callWithPolicy` is exported for integrators' own calls: it only
+retries when `idempotent: true` is passed, so ambiguous writes (where the
+first attempt may have landed) are never retried.
+
+Custom `ChainReader` implementations receive the same `{ signal, timeoutMs }`
+as the last argument of each read and should honour it.
+
+### Transport error taxonomy
+
+Failed reads reject with a `TransportError` (exported, with
+`isTransportError(err, kind?)` and `classifyError(err)`); narrow on `kind`:
+
+| `kind` | Meaning | Retried (idempotent reads) |
+|---|---|---|
+| `network` | No usable answer: connection refused/reset, DNS, HTTP 5xx or 429. | Yes |
+| `timeout` | No answer within `timeoutMs`. | Yes |
+| `aborted` | The caller's `AbortSignal` fired. | No |
+| `protocol` | The server answered with something unusable: malformed response, simulation/contract error, HTTP 4xx. | No |
+| `not_found` | The RPC endpoint or contract does not exist (HTTP 404). A missing *attestation* is not an error; it is `null`. | No |
+| `untrusted` | Refused before sending because the transport is not trusted (plain HTTP without `allowHttp`). | No |
+
+`error.attempts` is the number of attempts made. In `verifyCard` any of these
+becomes the `unavailable` verdict, with the error on `result.transportError`.
+The SDK's lint (`pnpm lint`, `@typescript-eslint/no-floating-promises` and
+`no-misused-promises`) keeps failure paths free of unhandled rejections, and
+the fake-timer tests in `test/transport.test.ts` assert none occur.
+
 ### Trust anchors
 
 `loadTrustAnchors` accepts either explicit configuration
@@ -159,8 +205,15 @@ resolves the bindings from `/bindings/`), and open
 ```sh
 cd packages/verifier-sdk
 pnpm install
-pnpm typecheck && pnpm test && pnpm build && pnpm size
+pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm size
+pnpm lint:i18n       # catalog coverage, provenance, reading level (after build)
+pnpm check:package   # publint + are-the-types-wrong on the packed tarball
+pnpm smoke           # install the packed tarball; import from ESM, CJS, bundler, worker
 ```
+
+Supported runtimes and minimum versions are in the package
+[README](../packages/verifier-sdk/README.md#compatibility); `pnpm smoke`
+fails if that table and the tested targets drift apart.
 
 - Unit tests use a mocked chain reader; `test/verifier.test.ts` includes a
   truth table covering every verdict.

@@ -6,6 +6,7 @@ import type {
   StatusListCheck,
 } from "./chain.js";
 import { commitV1, type FieldValue } from "./commitment.js";
+import { classifyError, type TransportError } from "./errors.js";
 import { parseQrPayload, QrPayloadError, type QrPayload } from "./qr.js";
 import { BindingsChainReader } from "./rpc.js";
 import {
@@ -235,11 +236,11 @@ export class LafiyaVerifier {
     let statusList: StatusListCheck | null = null;
     try {
       [latest, history] = await Promise.all([
-        this.chain.getAttestation(trust, payload.recordHash),
-        this.chain.getAttestationHistory(trust, payload.recordHash),
+        this.chain.getAttestation(trust, payload.recordHash, call),
+        this.chain.getAttestationHistory(trust, payload.recordHash, call),
       ]);
       if (!latest) {
-        revoked = (await this.chain.isRevoked?.(trust, payload.recordHash)) ?? false;
+        revoked = (await this.chain.isRevoked?.(trust, payload.recordHash, call)) ?? false;
       } else {
         [attesterState, quorum, disputed, statusList] = await Promise.all([
           this.chain.getAttesterStatus(trust, latest.attester),
@@ -249,8 +250,12 @@ export class LafiyaVerifier {
         ]);
       }
     } catch (err) {
-      reasons.push({ code: "unavailable", message: `chain read failed: ${String(err)}` });
-      return done({ payload });
+      const transportError = classifyError(err);
+      reasons.push({
+        code: "unavailable",
+        message: `chain read failed (${transportError.kind}): ${transportError.message}`,
+      });
+      return done({ payload, transportError });
     }
 
     const statusListResult = statusList
