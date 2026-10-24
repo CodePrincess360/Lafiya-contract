@@ -1,4 +1,5 @@
-# ADR-0014: Offline-verifiable attestation receipts for responders without connectivity
+<!-- adr-redirect: 0025-offline-attestation-receipts.md -->
+# Moved: ADR-0025
 
 - **Status:** Proposed
 - **Date:** 2026-09-27
@@ -253,7 +254,6 @@ truth for staleness:
 This means the freshness fields tighten the offline window but never widen it: the effective
 acceptance window is `min(valid_until, trust_bundle.expires_at)` measured against a clock that
 is clamped to the bundle's validity range.
-=======
 
 ### Cross-network confusion
 

@@ -1,4 +1,5 @@
-# ADR-0012: Coordinated Emergency Stop across Registries
+<!-- adr-redirect: 0021-coordinated-emergency-stop.md -->
+# Moved: ADR-0021
 
 - **Status:** Proposed
 - **Date:** 2026-09-26

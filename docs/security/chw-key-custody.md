@@ -1,6 +1,6 @@
 # CHW Attester Key Custody and Device Policy
 
-Decision record: [ADR-0012](../adr/0012-chw-attester-key-custody.md).
+Decision record: [ADR-0012](../adr/0019-chw-attester-key-custody.md).
 Applies to every Community Health Worker (CHW) whose address is allowlisted in
 `attester-registry`.
 
@@ -181,7 +181,7 @@ redaction guarantees are preserved.
 
 ## 7. Mapping to contract features
 
-See the dependency table in [ADR-0012](../adr/0012-chw-attester-key-custody.md#contract-feature-dependencies).
+See the dependency table in [ADR-0012](../adr/0019-chw-attester-key-custody.md#contract-feature-dependencies).
 Summary: rotation (#331, #355), compromise windows (#337), renouncement (#332),
 sponsored attestations (#347), passkey signers (#356), and re-enrollment after
 suspension (#324) are open; self-suspension for duress still has to be filed.

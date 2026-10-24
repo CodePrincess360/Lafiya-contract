@@ -120,3 +120,29 @@ description.
 - **A protocol change breaks a deployed contract:** the network cannot be
   rolled back. `pause()` the affected registries, ship a fix built with the
   new SDK through the normal upgrade process, and then `unpause()`.
+
+## 7. Resource headroom alerts
+
+`scripts/ops/resource_headroom.py` compares the measured per-call usage in `budgets/baseline.json`
+with the current network limits (JSON with the keys of `config/network-limits.json`) and with the
+last accepted snapshot. Run it on a schedule after each simulation refresh:
+
+```bash
+python3 scripts/ops/resource_headroom.py --limits current-limits.json \
+  --margin 0.2 --metrics-out /var/lib/node_exporter/lafiya_headroom.prom
+```
+
+It exits non-zero and prints `ALERT:` lines when a call's headroom falls below the margin or any
+limit differs from the snapshot. Metrics (`lafiya_resource_headroom_ratio`, `lafiya_network_limit`,
+`lafiya_headroom_alerts`) feed `observability/grafana-resource-headroom.json`.
+
+**Response:**
+
+1. Identify the limit that changed (`network limit ... changed`) and the affected calls.
+2. Re-run simulation for those calls and refresh `budgets/baseline.json` if usage moved.
+3. If headroom is exhausted, follow sections 3–4 (upgrade timing and procedure) to ship a
+   cheaper implementation before the change takes effect.
+4. Once the new limits are understood, update `config/network-limits.json` in a reviewed PR.
+
+Test: `python3 -m pytest -o addopts="" scripts/tests/test_resource_headroom.py` (includes an
+injected limit reduction that must alert).

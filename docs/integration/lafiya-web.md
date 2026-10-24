@@ -10,7 +10,7 @@ Related decisions: [ADR-0001](../adr/0001-hash-only-on-chain-footprint.md)
 [ADR-0008](../adr/0008-record-commitment-canonicalization.md) (record hash),
 [ADR-0010](../adr/0010-release-manifest-and-compatibility.md) (release manifest),
 [ADR-0011](../adr/0011-rpc-provider-failover-and-transaction-recovery.md) (RPC
-failure taxonomy), [ADR-0012](../adr/0012-chw-attester-key-custody.md) (CHW keys).
+failure taxonomy), [ADR-0012](../adr/0019-chw-attester-key-custody.md) (CHW keys).
 
 The words MUST, MUST NOT, and SHOULD are used as in RFC 2119.
 

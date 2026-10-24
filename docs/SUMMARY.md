@@ -41,6 +41,8 @@
 
 # Decisions
 
+- [Mainnet readiness gate](runbooks/mainnet-readiness.md)
+- [Runbook: TTL keeper](runbooks/ttl-keeper.md)
 - [ADR index](adr/README.md)
   - [ADR-0001: Hash-only on-chain footprint](adr/0001-hash-only-on-chain-footprint.md)
   - [ADR-0002: contractclient boundary](adr/0002-contractclient-boundary.md)

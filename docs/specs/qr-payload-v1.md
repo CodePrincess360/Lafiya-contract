@@ -6,8 +6,8 @@
 - **Authors:** Lafiya contract maintainers
 - **Related:** [Issue #389](https://github.com/Lafiya-xyz/Lafiya-contract/issues/389),
   [ADR-0008 (LRC-1)](../adr/0008-record-commitment-canonicalization.md),
-  [ADR-0012 (LRC-2)](../adr/0012-lrc2-selective-disclosure.md),
-  [ADR-0014 (offline receipts)](../adr/0014-offline-attestation-receipts.md)
+  [ADR-0023 (LRC-2)](../adr/0023-lrc2-selective-disclosure.md),
+  [ADR-0025 (offline receipts)](../adr/0025-offline-attestation-receipts.md)
 
 ---
 
@@ -81,7 +81,7 @@ minimize encoded size. All fields use their natural CBOR types.
 | `4` | `card_ref` | bytes(32) | **Yes** | The attested record commitment (LRC-1 or LRC-2 root). |
 | `5` | `lrc_version` | uint | No | `1` = LRC-1 whole-record, `2` = LRC-2 selective disclosure. Defaults to `1` if absent. |
 | `6` | `disclosures` | array | No | LRC-2 disclosure package (see §4.2). Present only when `lrc_version = 2`. |
-| `7` | `offline_receipt` | map | No | Signed attestation receipt for offline verification (see ADR-0014). |
+| `7` | `offline_receipt` | map | No | Signed attestation receipt for offline verification (see ADR-0025). |
 | `8` | `fallback_url` | tstr | No | Untrusted display-only URL. Verifiers MUST NOT use this for verification. |
 | `9` | `patient_sig` | bytes(64) | No | Ed25519 signature by the patient's key over the canonical encoding of fields 1–5. |
 | `11` | `issued_at` | uint | No | Unix epoch seconds at which the card payload was issued (see §12). |
@@ -106,7 +106,7 @@ Additionally, undisclosed leaves are carried in a separate field:
 
 ### 4.3 Offline receipt (key `7`)
 
-See ADR-0014. When present, this is a CBOR map with at minimum:
+See ADR-0025. When present, this is a CBOR map with at minimum:
 
 | Sub-key | Name | Type |
 |---------|------|------|
@@ -374,7 +374,7 @@ patient, or modifies the printed `card_ref` to point to a different attested com
   An attacker cannot produce a valid signature for a substituted payload without the patient's
   private key.
 - Physical security of the card is out of scope for this spec; see the offline receipt spec
-  (ADR-0014) for tamper-evidence requirements on printed cards.
+  (ADR-0025) for tamper-evidence requirements on printed cards.
 
 ### 9.2 Replay attack
 
@@ -386,7 +386,7 @@ patient, or modifies the printed `card_ref` to point to a different attested com
   a configurable threshold (e.g. 12 months) as stale.
 - If the attester revokes the attestation, `get_attestation` returns `None`, and the verifier
   treats the card as unverified.
-- The offline receipt (ADR-0014) includes the `ledger_seq` and `attested_at` fields, which a
+- The offline receipt (ADR-0025) includes the `ledger_seq` and `attested_at` fields, which a
   verifier can use to bound the validity window.
 
 ### 9.3 Cross-network confusion

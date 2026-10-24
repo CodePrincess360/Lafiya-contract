@@ -1,4 +1,5 @@
-# ADR-0012: W3C Verifiable Credentials 2.0 export for Lafiya attestations
+<!-- adr-redirect: 0022-w3c-vc-export-format.md -->
+# Moved: ADR-0022
 
 | Field | Value |
 |---|---|

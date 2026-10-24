@@ -1,4 +1,5 @@
-# ADR-0012: Multi-jurisdiction deployment topology
+<!-- adr-redirect: 0020-multi-jurisdiction-deployment-topology.md -->
+# Moved: ADR-0020
 
 - **Status:** Proposed
 - **Date:** 2026-09-25

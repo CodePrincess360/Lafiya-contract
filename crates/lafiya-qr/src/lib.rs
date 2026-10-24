@@ -190,13 +190,13 @@ pub struct Disclosure {
 }
 
 // ---------------------------------------------------------------------------
-// Offline receipt (ADR-0014)
+// Offline receipt (ADR-0025)
 // ---------------------------------------------------------------------------
 
 /// An offline-verifiable attestation receipt embedded in a QR payload.
 ///
 /// Enables a responder to verify the card without a live Soroban RPC call.
-/// See ADR-0014 for the full specification.
+/// See ADR-0025 for the full specification.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OfflineReceipt {
     /// Receipt version (always `1` for this spec).
@@ -237,7 +237,7 @@ pub struct QrPayload {
     pub disclosures: Option<Vec<Disclosure>>,
     /// Undisclosed leaf hashes for LRC-2 payloads.
     pub undisclosed_leaves: Option<Vec<[u8; 32]>>,
-    /// Offline attestation receipt (ADR-0014).
+    /// Offline attestation receipt (ADR-0025).
     pub offline_receipt: Option<OfflineReceipt>,
     /// Untrusted display-only URL. Must NOT be used for verification.
     pub fallback_url: Option<String>,
