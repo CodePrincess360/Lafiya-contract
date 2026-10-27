@@ -211,3 +211,9 @@ For details on the redeployment, initialization, and upgrade state migration pro
 - [Contract Upgrade Runbook](runbooks/contract-upgrade.md)
 
 Always follow the instructions in the runbook when performing redeployments to ensure that downstream services are not interrupted.
+
+## Mainnet Enablement Gate
+
+Filling in any `[mainnet.contracts]` id in `config/networks.toml` is blocked by CI unless
+`config/mainnet-readiness.json` records valid audit, ceremony, game-day and monitoring evidence
+and owner sign-off. See [Mainnet readiness gate](runbooks/mainnet-readiness.md).
