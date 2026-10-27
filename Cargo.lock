@@ -291,6 +291,7 @@ dependencies = [
 name = "attester-registry"
 version = "0.1.0"
 dependencies = [
+ "ed25519-dalek 3.0.0",
  "proptest",
  "soroban-sdk",
 ]
@@ -1741,6 +1742,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "lafiya-bench"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "serde_json",
+ "soroban-sdk",
+]
+
+[[package]]
 name = "lafiya-cli"
 version = "0.1.0"
 dependencies = [
@@ -1798,6 +1809,7 @@ dependencies = [
 name = "lafiya-contract-common"
 version = "0.1.0"
 dependencies = [
+ "proptest",
  "soroban-sdk",
 ]
 
@@ -1816,6 +1828,14 @@ dependencies = [
  "tracing",
  "ureq",
  "wiremock",
+]
+
+[[package]]
+name = "lafiya-verification-model"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

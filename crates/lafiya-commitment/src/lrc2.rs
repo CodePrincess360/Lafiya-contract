@@ -58,9 +58,9 @@
 //! mixed into the root hash itself — the on-chain slot is opaque and the
 //! version is carried by the application layer.
 //!
-//! See [`docs/adr/0012-lrc2-selective-disclosure.md`][adr] and [Issue #388].
+//! See [`docs/adr/0023-lrc2-selective-disclosure.md`][adr] and [Issue #388].
 //!
-//! [adr]: ../../docs/adr/0012-lrc2-selective-disclosure.md
+//! [adr]: ../../docs/adr/0023-lrc2-selective-disclosure.md
 //! [Issue #388]: https://github.com/Lafiya-xyz/Lafiya-contract/issues/388
 
 use sha2::{Digest, Sha256};

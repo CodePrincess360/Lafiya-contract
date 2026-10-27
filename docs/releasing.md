@@ -138,6 +138,10 @@ The values depend only on the commit, so reproducibility holds. CI and the tag
 pipeline assert them with `scripts/check_wasm_meta.py --commit <sha>`; locally,
 `stellar contract info meta --wasm <file>` shows them.
 
+The same pipeline then runs `scripts/check_wasm_policy.py`, which checks each
+wasm's host imports, instructions and size against
+[`security/wasm-policy.json`](security/wasm-policy.md).
+
 ### Signed build provenance
 
 Tag builds attach signed [SLSA](https://slsa.dev/) provenance for every `.wasm`
@@ -238,3 +242,9 @@ For details on the redeployment, initialization, and upgrade state migration pro
 - [Contract Upgrade Runbook](runbooks/contract-upgrade.md)
 
 Always follow the instructions in the runbook when performing redeployments to ensure that downstream services are not interrupted.
+
+## Mainnet Enablement Gate
+
+Filling in any `[mainnet.contracts]` id in `config/networks.toml` is blocked by CI unless
+`config/mainnet-readiness.json` records valid audit, ceremony, game-day and monitoring evidence
+and owner sign-off. See [Mainnet readiness gate](runbooks/mainnet-readiness.md).
