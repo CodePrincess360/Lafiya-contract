@@ -1113,6 +1113,7 @@ impl AttestationRegistry {
         let mut checked_attesters: Vec<Address> = Vec::new(&env);
         let mut results = Vec::new(&env);
 
+        // loop-bound: BATCH_LIMIT -- <=50 requests, one persistent read/write each
         for request in requests.iter() {
             if !checked_attesters.contains(&request.attester) {
                 request.attester.require_auth();
@@ -1211,6 +1212,7 @@ impl AttestationRegistry {
             .ok_or(Error::AttestationNotFound)?;
 
         let mut removed_count = 0u64;
+        // loop-bound: MAX_HISTORY -- <=10 persistent reads
         for seq in Self::history_start(sequence)..=sequence {
             if Self::slot_is_active(&env, &record_hash, seq) {
                 removed_count += 1;
@@ -1264,6 +1266,7 @@ impl AttestationRegistry {
             .ok_or(Error::AttestationNotOwned)?;
 
         let mut found = false;
+        // loop-bound: MAX_HISTORY -- <=10 persistent reads
         for seq in Self::history_start(sequence)..=sequence {
             if !Self::slot_is_active(&env, &record_hash, seq) {
                 continue;
@@ -1361,6 +1364,7 @@ impl AttestationRegistry {
     /// position; missing attestations are `None`. Callable by anyone.
     pub fn get_attestations(env: Env, record_hashes: Vec<BytesN<32>>) -> Vec<Option<Attestation>> {
         let mut attestations = Vec::new(&env);
+        // loop-bound: ACCEPTED(caller) -- read-only view; caller-supplied length, caller pays, no shared state affected
         for record_hash in record_hashes {
             attestations.push_back(
                 Self::latest_active(&env, &record_hash).map(|(_, attestation)| attestation),
@@ -1424,6 +1428,7 @@ impl AttestationRegistry {
         let mut revoked = false;
         let mut withdrawn = false;
 
+        // loop-bound: MAX_HISTORY -- <=10 persistent reads
         for seq in (Self::history_start(sequence)..=sequence).rev() {
             let Some(attestation) = env
                 .storage()
@@ -1819,6 +1824,7 @@ impl AttestationRegistry {
     /// Callable by anyone.
     pub fn get_interface(env: Env) -> InterfaceInfo {
         let mut features = Vec::new(&env);
+        // loop-bound: FEATURES -- fixed compile-time array
         for feature in FEATURES {
             features.push_back(Symbol::new(&env, feature));
         }
@@ -2252,6 +2258,7 @@ impl AttestationRegistry {
         let revoked_through = Self::revoked_through(env, record_hash);
 
         let mut best: Option<(u64, Attestation)> = None;
+        // loop-bound: MAX_HISTORY -- <=10 persistent reads
         for seq in (Self::history_start(sequence)..=sequence).rev() {
             if seq <= revoked_through
                 || env
